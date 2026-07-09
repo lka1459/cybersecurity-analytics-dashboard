@@ -61,3 +61,5 @@ def ingest_data() -> None:
                 if_exists="replace",
                 index=False
             )
+
+ingest_data()

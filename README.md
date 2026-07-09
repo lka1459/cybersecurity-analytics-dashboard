@@ -39,6 +39,6 @@ Interactive Dashboard
 This project uses the **CIC-IDS2017** intrusion detection dataset.
 
 Source:
-https://www.kaggle.com/datasets/chethuhn/network-intrusion-dataset
+https://www.unb.ca/cic/datasets/ids-2017.html
 
 The dataset contains network traffic captured under both normal and malicious conditions, including attacks such as DDoS, Port Scanning, Brute Force, Botnet, and Web Attacks.
