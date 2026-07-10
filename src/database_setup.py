@@ -42,24 +42,28 @@ def ingest_data() -> None:
     type_regex: str = r"(?<=-[Ww]orkingHours-)[\w\-.]+(?=.pcap)"
 
     for file_name in path.iterdir():
-        with open(file_name, mode='r') as file:
-            datafile: pd.DataFrame = pd.read_csv(file)
-            day_match: re.Match = re.search(day_regex, str(file_name.name))
-            type_match: re.Match = re.search(type_regex, str(file_name))
-            if day_match:
-                day_match: str = day_match.group().replace("_", " ")
-            if type_match:
-                type_match: str = type_match.group().replace("_", " ")
-            else:
-                type_match: str = "Working_Hours"
+        datafile: pd.DataFrame = pd.read_csv(file_name, low_memory=False, encoding="latin1")
+        day_match: re.Match = re.search(day_regex, str(file_name.name))
+        type_match: re.Match = re.search(type_regex, str(file_name))
+        if day_match:
+            day_match: str = day_match.group().replace("_", " ")
+        if type_match:
+            type_match: str = type_match.group().replace("_", " ")
+        else:
+            type_match: str = "Working_Hours"
 
-            table_name: str = f"{day_match}_{type_match}".replace(" ", "_")
-            
+        replacements = str.maketrans({" ": "_", "-": "_"})
+        table_name: str = f"{day_match}_{type_match}".translate(replacements)
+        
+        try:
             datafile.to_sql(
-                f"{table_name}",
-                engine, 
-                if_exists="replace",
-                index=False
-            )
-
-ingest_data()
+            f"{table_name}",
+            engine, 
+            if_exists="replace",
+            index=False
+                            )
+            print(f"{table_name} has been added to the Database.")
+        except Exception as e:
+            print(f"Error inserting {table_name}: {e}")
+            engine.rollback()
+            continue

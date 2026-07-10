@@ -12,3 +12,7 @@
 ## v0.2.1 — Switched to original CIC-IDS2017 flows and rebuilt database
 - Changed cleaned Kaggle dataset to original CIC-IDS2017 (same but more uncleaned features)
 - Rebuilt the database
+
+## v0.2.2 — Improved database importing workflow
+- Refined table naming logic to use underscores instead of dashes
+- Updated analysis notebook to fit changes
