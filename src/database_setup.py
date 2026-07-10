@@ -4,9 +4,10 @@ import re
 import os
 
 from pathlib import Path
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy_utils import database_exists, create_database
 from dotenv import load_dotenv
+from typing import List
 
 load_dotenv()
 
@@ -36,6 +37,14 @@ def ingest_data() -> None:
     Populates the Cyber Databoard database with the CSV files data.
     """
     engine: sqla.Engine = get_connection()
+    inspector: sqla.Inspector = sqla.inspect(engine)
+
+    tables = inspector.get_table_names()
+
+    if len(tables) == 8:
+        print("All tables already exist.")
+        return
+    
     parent: str = (Path.cwd())
     path: Path = Path(f"{parent}/data/")
     day_regex: str = r"[\w\-.]+(?=-[Ww]orkingHours)"
@@ -67,3 +76,26 @@ def ingest_data() -> None:
             print(f"Error inserting {table_name}: {e}")
             engine.rollback()
             continue
+
+def create_view() -> None:
+    """
+    Creates an 'all_traffic' view for the database that combines all tables for easier queries.
+    """
+    engine: sqla.Engine = get_connection()
+    inspector: sqla.Inspector = sqla.inspect(engine)
+
+    views: List[str] = inspector.get_view_names()
+    if 'all_traffic' in views:
+        print("'all_traffic' view has already been created.")
+        return
+    
+    with engine.connect() as conn:
+        with open(Path(r'sql\exploration\create_view.sql'), 'r') as file:
+            query: str = file.read()
+
+        conn.execute(sqla.text(query))
+        conn.commit()
+
+if __name__ == "__main__":
+    ingest_data()
+    create_view()

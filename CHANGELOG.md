@@ -16,3 +16,9 @@
 ## v0.2.2 — Improved database importing workflow
 - Refined table naming logic to use underscores instead of dashes
 - Updated analysis notebook to fit changes
+
+## v0.2.3 — Update Summary
+- Added docs/ folder with dataset_exploration.md
+- Introduced analytics.py for early analysis utilities
+- Created a new database view to simplify queries
+- Added SQL files and a helper function to load them and print DataFrames for quick analysis
