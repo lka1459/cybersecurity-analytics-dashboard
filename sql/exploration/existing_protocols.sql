@@ -1,4 +1,4 @@
-SELECT " Protocol", COUNT(*)
+SELECT " Protocol", COUNT(*) AS total
 FROM all_traffic
 GROUP BY " Protocol"
-ORDER BY COUNT(*)
+ORDER BY total

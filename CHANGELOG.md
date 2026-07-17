@@ -22,3 +22,8 @@
 - Introduced analytics.py for early analysis utilities
 - Created a new database view to simplify queries
 - Added SQL files and a helper function to load them and print DataFrames for quick analysis
+
+## v0.2.4 — Further analysis
+- Created several SQL files and analysed ports, IP addresses and packet size
+- Adjusted exisiting SQL queries to improve clarity
+- Updated dataset_exploration.md with new results

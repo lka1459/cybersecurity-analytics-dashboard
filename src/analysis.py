@@ -1,23 +1,13 @@
 import pandas as pd
 import sqlalchemy as sqla
-import os
 import sys
 
 from datetime import datetime
 from pathlib import Path
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 
-from dotenv import load_dotenv
 from typing import Dict, Optional
 from database_setup import get_connection
-
-load_dotenv()
-
-user: str = os.getenv("DB_USER")
-password: str = os.getenv("DB_PASSWORD")
-host: str = os.getenv("DB_HOST")
-port: str = os.getenv("PORT")
-database: str = os.getenv("DB_NAME")
 
 engine = get_connection()
 
@@ -44,7 +34,10 @@ def read_sql(filepath: str) -> pd.DataFrame:
 
             return df
 
-def print_df(df):
+def print_df(df) -> None:
+    """
+    Loop used to prevent overwhelming text output.
+    """
     while True:
         print(f"Would you like to print the dataframe? ")
         answer: str = input("[1] Yes \n[2] No \n[3] Exit \n")
@@ -59,11 +52,8 @@ def print_df(df):
             print("Error please try again")
     
 def main():
-    total_attacks: pd.DataFrame = read_sql(r"sql\exploration\total_attacks.sql")
-    print_df(total_attacks)
-    exist_protocols: pd.DataFrame = read_sql(r"sql\exploration\existing_protocols.sql")
-    print_df(exist_protocols)
-
+    attack_times: pd.DataFrame = read_sql(r"sql\exploration\dest_ip.sql")
+    print_df(attack_times)
 
 if __name__ == "__main__":
     main()

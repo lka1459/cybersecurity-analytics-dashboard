@@ -1,4 +1,5 @@
-SELECT  " Label", COUNT(*) as total
+SELECT " Timestamp"::date AS attack_day, " Label", COUNT(*) AS total 
 FROM all_traffic
-GROUP BY " Label"
-ORDER BY total DESC;
+WHERE " Label" != 'BENIGN'
+GROUP BY attack_day, " Label"
+ORDER BY total DESC
