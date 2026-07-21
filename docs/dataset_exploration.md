@@ -142,7 +142,6 @@ There doesn't seem to be anysort of indication of packet size being an indicatio
 
 ---
 
-
 ### What Source and Destination Ports were used by malicious network packets?
 
 **Query:** source_ip.sql, dest_ip.sql
@@ -201,6 +200,66 @@ There doesn't seem to be anysort of indication of packet size being an indicatio
 | 21   | 52.7.235.158   | Bot                      |       2 |
 | 22   | 52.6.13.28     | Bot                      |       2 |
 
-**Observation:** 
+**Observation:**
 172.16.0.1 seems to be the main source of attacks while 192.168.10.50 (likely somesort of local network) is the main target/destination of these attacks.
+
+---
+
+### How do attack flows differ from benign flow? 
+
+**Query:** attack_flow.sql
+
+**Result:**
+
+| Rank | Label | Flow Duration | Total Fwd Packets | Total Bwd Packets | Fwd Packets Total Length | Bwd Packets Total Length | Total |
+|----------|----------|----------:|----------:|----------:|----------:|----------:|------:|
+| 1 | BENIGN | 11,220,820.77 | 10.65 | 12.14 | 635.54 | 18,848.71 | 2,273,097 |
+| 2 | DoS Hulk | 57,081,731.89 | 5.28 | 4.21 | 281.33 | 7,770.72 | 231,073 |
+| 3 | PortScan | 82,820.23 | 1.02 | 1.00 | 1.09 | 12.24 | 158,930 |
+| 4 | DDoS | 16,955,591.77 | 4.47 | 3.26 | 31.91 | 7,373.63 | 128,027 |
+| 5 | DoS GoldenEye | 23,127,222.22 | 5.90 | 3.71 | 418.43 | 6,561.32 | 10,293 |
+| 6 | FTP-Patator | 4,513,244.60 | 5.50 | 7.81 | 60.03 | 93.91 | 7,938 |
+| 7 | SSH-Patator | 6,168,966.83 | 11.12 | 16.53 | 1,008.59 | 1,382.55 | 5,897 |
+| 8 | DoS slowloris | 56,554,365.02 | 6.34 | 1.66 | 810.69 | 20.59 | 5,796 |
+| 9 | DoS Slowhttptest | 57,719,891.73 | 5.74 | 0.96 | 496.55 | 118.39 | 5,499 |
+| 10 | Bot | 350,942.67 | 3.19 | 3.34 | 2,645.45 | 63.80 | 1,966 |
+| 11 | Web Attack Brute Force | 6,506,181.63 | 12.37 | 6.06 | 2,111.50 | 3,484.74 | 1,507 |
+| 12 | Web Attack XSS | 6,715,357.09 | 7.90 | 3.57 | 1,197.62 | 4,519.02 | 652 |
+| 13 | Infiltration | 78,407,720.50 | 830.22 | 829.61 | 376,725.78 | 5,013.67 | 36 |
+| 14 | Web Attack SQL Injection | 2,870,398.29 | 3.05 | 2.67 | 316.00 | 1,286.29 | 21 |
+| 15 | Heartbleed | 110,679,707.55 | 2,583.73 | 1,897.18 | 12,509.73 | 7,276,360.64 | 11 |
+
+**Observation:** 
+Heartbleed and Infiliration attacks seem to have the longest flow durations which indicates that they are the longest attacks. However since they also have so little actual records, this must be taken with a grain of salt. On the other hand, PortScans and Bot attacks which were at the bottom indicating that they were much quicker.
+
+---
+
+
+### Which attacks had the highest packet transmission rates? 
+
+**Query:** attack_flow.sql
+
+**Result:**
+| Rank | Label | Avg Flow Bytes/s | Avg Flow Packets/s | Total |
+|------|-------|-----------------:|-------------------:|------:|
+| 1 | BENIGN | 1,779,841.56 | 64,778.59 | 2,273,097 |
+| 2 | DoS Hulk | 29,401.72 | 182,511.92 | 231,073 |
+| 3 | PortScan | 220,359.75 | 62,690.57 | 158,930 |
+| 4 | DDoS | 61,117.88 | 172.79 | 128,027 |
+| 5 | DoS GoldenEye | 688.24 | 9.14 | 10,293 |
+| 6 | FTP-Patator | 799,464.59 | 115,888.89 | 7,938 |
+| 7 | SSH-Patator | 439.82 | 15,435.24 | 5,897 |
+| 8 | DoS slowloris | 43,921.22 | 4,231.88 | 5,796 |
+| 9 | DoS Slowhttptest | 21,642,420.63 | 22,235.78 | 5,499 |
+| 10 | Bot | 307,099.15 | 46,841.28 | 1,966 |
+| 11 | Web Attack Brute Force | 179.28 | 3,684.90 | 1,507 |
+| 12 | Web Attack XSS | 103.35 | 1,565.96 | 652 |
+| 13 | Infiltration | 20,188.22 | 2,820.06 | 36 |
+| 14 | Web Attack SQL Injection | 318.73 | 12,794.10 | 21 |
+| 15 | Heartbleed | 65,902.80 | 40.56 | 11 |
+
+**Observation:** 
+DoS Slowhttptest had the average flow btyes indicating extermely high payloads. Meanwhile DoS Hulk had the highest average flow of packets which suggests aggressive packet flooding movement. Additionally, FTP-Patator also had  the second highest average flow btyes and average flow packets indicated heavy packet tranmission.
+
+
 ---

@@ -11,6 +11,12 @@ from database_setup import get_connection
 
 engine = get_connection()
 
+pd.set_option("display.max_columns", None)
+pd.set_option("display.max_rows", None)
+pd.set_option("display.width", None)
+pd.set_option("display.max_colwidth", None)
+pd.set_option("display.float_format", "{:,.2f}".format)
+
 def query_database(query: str, para_bindings: Optional[Dict[str, str | int]] = None) -> pd.DataFrame:
     """
     Queries the database based on user input (easier during testing).
@@ -52,8 +58,8 @@ def print_df(df) -> None:
             print("Error please try again")
     
 def main():
-    attack_times: pd.DataFrame = read_sql(r"sql\exploration\dest_ip.sql")
-    print_df(attack_times)
+    query: pd.DataFrame = read_sql(r"sql\exploration\null_check.sql")
+    return print_df(query)
 
 if __name__ == "__main__":
     main()
